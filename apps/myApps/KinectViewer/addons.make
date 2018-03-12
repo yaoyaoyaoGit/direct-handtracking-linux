@@ -1,0 +1,3 @@
+ofxFreenect2
+ofxOpenCv
+ofxVectorGraphics

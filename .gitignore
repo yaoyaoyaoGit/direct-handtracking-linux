@@ -1,32 +1,164 @@
-# Prerequisites
-*.d
+#########################
+# openFrameworks patterns
+#########################
 
-# Compiled Object files
-*.slo
-*.lo
+# build files
+openFrameworks.a
+openFrameworksDebug.a
+openFrameworksUniversal.a
+libs/openFrameworksCompiled/lib/*/*
+!libs/openFrameworksCompiled/lib/*/.gitkeep
+
+# apothecary
+scripts/apothecary
+
+# rule to avoid non-official addons going into git
+# see addons/.gitignore
+addons/*
+!addons/ofxFreenect2
+# rule to avoid non-official apps going into git
+# see apps/.gitignore
+#apps/*
+#!apps/myApps/KinectViewer
+
+# rule to ignore compiled / downloaded libs
+/libs/*
+#!/libs/openFrameworks
+#!/libs/openFrameworksCompiled
+
+# also, see examples/.gitignore
+docs/*
+examples/*
+export/*
+other/*
+projectGenerator-linux64/*
+scripts/*
+
+#########################
+# core examples
+#########################
+
+apps/*/*/bin/*
+!apps/*/*/bin/data/
+
+# QtCreator
+apps/*/*/*.qbs
+apps/*/*/*.qbs.user
+apps/*/*/*.pro
+apps/*/*/*.pro.user
+
+#########################
+# operating system
+#########################
+
+# Linux
+apps/*/*/Makefile
+apps/*/*/config.make
+# Leave Android files in until project generation works
+!/android/*/Makefile
+!/android/*/config.make
+#########################
+# general
+#########################
+
+[Bb]uild/
+[Oo]bj/
 *.o
-*.obj
+examples/**/[Dd]ebug*/
+examples/**/[Rr]elease*/
+examples/**/gcc-debug/
+examples/**/gcc-release/
+tests/**/[Dd]ebug*/
+tests/**/[Rr]elease*/
+tests/**/gcc-debug/
+tests/**/gcc-release/
+*.mode*
+*.app/
+*.pyc
+.svn/
+*.log
+*.cpp.eep
+*.cpp.elf
+*.cpp.hex
 
-# Precompiled Headers
-*.gch
-*.pch
+#########################
+# IDE
+#########################
 
-# Compiled Dynamic libraries
-*.so
-*.dylib
-*.dll
+# XCode
+*.pbxuser
+*.perspective
+*.perspectivev3
+*.mode1v3
+*.mode2v3
+# XCode 4
+xcuserdata
+*.xcworkspace
 
-# Fortran module files
-*.mod
-*.smod
+# Code::Blocks
+*.depend
+*.layout
 
-# Compiled Static libraries
-*.lai
-*.la
-*.a
-*.lib
+# Visual Studio
+*.sdf
+*.opensdf
+*.suo
+*.pdb
+*.ilk
+*.aps
+ipch/
 
-# Executables
-*.exe
-*.out
-*.app
+# Eclipse
+.metadata
+local.properties
+.externalToolBuilders
+
+# Android Studio
+.idea
+.gradle
+gradle
+gradlew
+gradlew.bat
+
+# QtCreator
+*.qbs.user
+*.pro.user
+*.pri
+
+
+#########################
+# operating system
+#########################
+
+# Linux
+*~
+# KDE
+.directory
+.AppleDouble
+
+# OSX
+.DS_Store
+*.swp
+*~.nib
+# Thumbnails
+._*
+examples/ios/**/mediaAssets
+
+# Windows
+# Windows image file caches
+Thumbs.db
+# Folder config file
+Desktop.ini
+
+# Android
+.csettings
+/libs/openFrameworksCompiled/project/android/paths.make
+
+# Android Studio
+*.iml
+
+#########################
+# miscellaneous
+#########################
+
+.mailmap
