@@ -3,7 +3,11 @@
 #include "ofMain.h"
 #include "ofxFreenect2.h"
 class ofApp : public ofBaseApp{
-	ofxFreenect2::Device* device;
+private:
+	ofxFreenect2::Stream* stream;
+	ofImage depthviz;
+	// ofTexture irviz;
+	ofImage irviz;
 	public:
 		void setup();
 		void update();
