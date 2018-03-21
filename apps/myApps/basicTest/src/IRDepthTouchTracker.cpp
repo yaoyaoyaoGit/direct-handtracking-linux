@@ -70,7 +70,7 @@ void IRDepthTouchTracker::buildEdgeImage() {
 	}
 	cv::Mat irCannyMat(irCanny.getCvImage());
 	/* Edge finding, lightly tuned parameters */
-	cv::Canny(irCannyMat, irCannyMat, 4000, 8000, 7, true);
+	cv::Canny(irCannyMat, irCannyMat, 4000, 8000, 5, true);
 
 	/* Mark significant pixels (IR pixels that will be holefilled). */
 	/* Currently, all pixels are considered significant. */
@@ -761,6 +761,7 @@ void IRDepthTouchTracker::threadedFunction() {
 	fps.fps = 30; // estimated fps
 
 	while(isThreadRunning()) {
+		stream->update();
 		if(!stream->isFrameNew()){
 			continue;
 		}

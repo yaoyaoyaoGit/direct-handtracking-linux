@@ -113,32 +113,36 @@ void Stream::update(){
 			if(depthPixels.getWidth() != rawDepthPixels.getWidth())
 				depthPixels.allocate(rawDepthPixels.getWidth(), rawDepthPixels.getHeight(), 1);
 			unsigned short* pixels = depthPixels.getData();
+			float fmax = std::numeric_limits<float>::min();
+			float fmin = std::numeric_limits<float>::max();
+			for(unsigned int i = 0; i < depthPixels.size(); i++){
+				if(fmax < rawDepthPixels[i])
+					fmax = rawDepthPixels[i];
+				if(fmin > rawDepthPixels[i])
+					fmin = rawDepthPixels[i];
+			} 
 			for(int i = 0; i < depthPixels.size(); i++){
+				// pixels[i] = (float)(rawDepthPixels[i]-fmin)/(fmax-fmin)*65535.;
 				pixels[i] = rawDepthPixels[i];
-				// if(i % 1000 == 0){
-				// 	ofLogVerbose("ofxFreenect2") << float(rawDepthPixels[i]) << " " << pixels[i] <<std::endl;
-				// } 
-				// pixels[i] = ofMap(rawDepthPixels[i], 500, 6000, 255, 0, true);
-				// if(pixels[i] == 255){
-				// 	pixels[i] = 0;
-				// }
 			}
 		}
 		if(rawIrPixels.size() > 0){
 			if(irPixels.getWidth() != rawIrPixels.getWidth())
 				irPixels.allocate(rawIrPixels.getWidth(), rawIrPixels.getHeight(), 1);
 			unsigned short* pixels = irPixels.getData();
+			float fmax = std::numeric_limits<float>::min();
+			float fmin = std::numeric_limits<float>::max();
+			for(unsigned int i = 0; i < irPixels.size(); i++){
+				if(fmax < rawIrPixels[i])
+					fmax = rawIrPixels[i];
+				if(fmin > rawIrPixels[i])
+					fmin = rawIrPixels[i];
+			} 
 			for(int i = 0; i < irPixels.size(); i++){
+				// pixels[i] = (float)(rawIrPixels[i]-fmin)/(fmax-fmin)*65535.;
 				pixels[i] = rawIrPixels[i];
-				// if(pixels[i] == 65535){
-				// 	ofLogVerbose("ofxFreenect2") << float(rawIrPixels[i])<<" "<< int(rawIrPixels[i]) << std::endl;
-				// 	ofSleepMillis(1000);					
-				// }
-				// pixels[i] = ofMap(rawIrPixels[i], 0, 65535, 0, 1024, true);
-				// if(pixels[i] == 255){
-				// 	pixels[i] = 0cdD	t;
-				// }
 			}
+
 		}
 		bNewFrame = true;
 	}

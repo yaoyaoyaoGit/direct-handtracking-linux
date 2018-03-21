@@ -120,6 +120,7 @@ void BackgroundUpdaterThread::threadedFunction() {
 		// ofSleepMillis(1000);
 		// ofLogVerbose("background") << "running";
 		// Check if the depth frame is new
+		stream->update();
 		if(!stream->isFrameNew()){
 			continue;
 		}

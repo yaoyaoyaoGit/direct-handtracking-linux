@@ -70,6 +70,7 @@ void ofApp::handleTouches(const vector<FingerTouch> &newTouches) {
 }
 
 void ofApp::updateDebug() {
+	stream->update();
 	if(stream->isFrameNew()){
 		unsigned short *depthpx = stream->getDepthPixels().getData();
 		const int dw = stream->width;
@@ -138,38 +139,38 @@ void ofApp::drawDebug(){
 		+ ofVAArgsToString("BG Update FPS: %.1f\n", bgthread->fps.fps)
 		+ ofVAArgsToString("Touch Update FPS: %.1f\n", touchTracker->fps.fps), DISPW, 0, HAlign::right, VAlign::top);
 
-	// int debugMouseX = mouseX - PROJW;
-	// int debugMouseY = mouseY;
-	// if(0 <= debugMouseX && debugMouseX < dw && 0 <= debugMouseY && debugMouseY < dh) {
-	// 	ofVec2f pos(debugMouseX, debugMouseY);
+	int debugMouseX = mouseX - PROJW;
+	int debugMouseY = mouseY;
+	if(0 <= debugMouseX && debugMouseX < dw && 0 <= debugMouseY && debugMouseY < dh) {
+		ofVec2f pos(debugMouseX, debugMouseY);
 
-	// 	string description;
-	// 	ofPoint curPt = getLiveWorldPoint(pos);
-	// 	description += ofVAArgsToString("curpos: %.6f, %.6f, %.6f\n", curPt.x, curPt.y, curPt.z);
+		string description;
+		ofPoint curPt = getLiveWorldPoint(pos);
+		description += ofVAArgsToString("curpos: %.6f, %.6f, %.6f\n", curPt.x, curPt.y, curPt.z);
 
-	// 	ofPoint bgPt = getBackgroundWorldPoint(pos);
-	// 	description += ofVAArgsToString("bgpos:  %.6f, %.6f, %.6f\n", bgPt.x, bgPt.y, bgPt.z);
+		ofPoint bgPt = getBackgroundWorldPoint(pos);
+		description += ofVAArgsToString("bgpos:  %.6f, %.6f, %.6f\n", bgPt.x, bgPt.y, bgPt.z);
 
-	// 	drawText(description, 0, DISPH, HAlign::left, VAlign::bottom);
-	// }
+		drawText(description, 0, DISPH, HAlign::left, VAlign::bottom);
+	}
 }
 
 void ofApp::draw(){
 	ofClear(64);
 
 	/* Draw onto projector */
-	// ofPushMatrix();
-	// ofPushStyle();
-	// ofSetMatrixMode(OF_MATRIX_MODELVIEW);
- //    ofMultMatrix(projector_transpose);
-	// drawProjector();
-	// ofPopStyle();
-	// ofPopMatrix();
+	ofPushMatrix();
+	ofPushStyle();
+	ofSetMatrixMode(OF_MATRIX_MODELVIEW);
+    ofMultMatrix(projector_transpose);
+	drawProjector();
+	ofPopStyle();
+	ofPopMatrix();
 
 	/* Draw debug info */
 	ofPushMatrix();
 	ofPushStyle();
-	// ofTranslate(PROJW, 0);
+	ofTranslate(PROJW, 0);
 	drawDebug();
 	ofPopStyle();
 	ofPopMatrix();
@@ -178,7 +179,7 @@ void ofApp::draw(){
 //--------------------------------------------------------------
 void ofApp::teardown() {
 	/* Destroy everything cleanly. */
-	// delete touchTracker;
+	delete touchTracker;
 
 	BaseApp::teardown();
 }
