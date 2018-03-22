@@ -81,34 +81,14 @@ void ofApp::updateDebug() {
 		}
 		depthviz.update();
 	}
-	// /* Check if the frame is actually new */
-	// uint64_t curDepthTimestamp = depthStream.getFrameTimestamp();
-	// if(lastDepthTimestamp == curDepthTimestamp)
-	// 	return;
-	// lastDepthTimestamp = curDepthTimestamp;
-	// curDepthFrame++;
-
-	/* Debugging */
-	// auto &depthPixels = depthStream.getPixelsRef();
-	// uint16_t *depthpx = depthPixels.getPixels();
-	// const int dw = depthPixels.getWidth();
-	// const int dh = depthPixels.getHeight();
-
-	// uint8_t *depthvizpx = depthviz.getPixels();
-
-	// /* Convert depth data for visualization purposes */
-	// for(int i=0; i<dw*dh; i++) {
-	// 	depthvizpx[i] = depthpx[i];
-	// }
-
-	// depthviz.reloadTexture();
 }
 
 //--------------------------------------------------------------
 void ofApp::drawProjector(){
 	/* In this function, draw points in real-world coordinates (metres) */
-	ofSetLineWidth(0.002);
-	
+	ofSetLineWidth(2);
+	ofNoFill();
+	ofDrawCircle(100,100,10);
 	/* Reproject touches */
 	for(auto &entry : touchMap) {
 		auto &touch = entry.second;
@@ -120,7 +100,7 @@ void ofApp::drawProjector(){
 			ofNoFill();
 			ofSetColor(255, 0, 0);
 		}
-		ofCircle(worldPt, 0.010);
+		ofDrawCircle(worldPt, 10);
 		ofDrawBitmapString(ofVAArgsToString("%.2f\n%d", touch.touchZ, touch.id), worldPt);
 	}
 }
@@ -157,23 +137,22 @@ void ofApp::drawDebug(){
 
 void ofApp::draw(){
 	ofClear(64);
-
-	/* Draw onto projector */
-	ofPushMatrix();
-	ofPushStyle();
-	ofSetMatrixMode(OF_MATRIX_MODELVIEW);
-    ofMultMatrix(projector_transpose);
-	drawProjector();
-	ofPopStyle();
-	ofPopMatrix();
-
 	/* Draw debug info */
 	ofPushMatrix();
 	ofPushStyle();
-	ofTranslate(PROJW, 0);
 	drawDebug();
 	ofPopStyle();
 	ofPopMatrix();
+
+	/* Draw onto projector */
+	// ofPushMatrix();
+	// ofPushStyle();
+	// ofSetMatrixMode(OF_MATRIX_MODELVIEW);
+ //    ofMultMatrix(projector_transpose);
+ //    ofTranslate(DISPW, 0);
+	// drawProjector();
+	// ofPopStyle();
+	// ofPopMatrix();
 }
 
 //--------------------------------------------------------------

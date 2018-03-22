@@ -8,7 +8,8 @@
 
 #include "IRDepthTouchTracker.h"
 #include "TextUtils.h"
-
+#include "opencv2/imgproc.hpp"
+#include "opencv2/highgui.hpp"
 /* Tweakable parameters */
 /// Edge/fence parameters
 const int edge_depthrel_dist = 2;	// px: distance range to consider relative-depth (smoothness) fence
@@ -68,9 +69,9 @@ void IRDepthTouchTracker::buildEdgeImage() {
 	for(int i=0; i<n; i++) {
 		ircannyPx[i] = irPx[i] / 64;
 	}
-	cv::Mat irCannyMat(irCanny.getCvImage());
+	cv::Mat irCannyMat = cv::cvarrToMat(irCanny.getCvImage());
 	/* Edge finding, lightly tuned parameters */
-	cv::Canny(irCannyMat, irCannyMat, 4000, 8000, 5, true);
+	cv::Canny(irCannyMat, irCannyMat, 4000, 8000, 5, true); // changes from 7 to 5
 
 	/* Mark significant pixels (IR pixels that will be holefilled). */
 	/* Currently, all pixels are considered significant. */

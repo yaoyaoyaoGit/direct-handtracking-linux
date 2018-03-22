@@ -17,7 +17,7 @@ class BaseApp : public ofBaseApp{
 		ofPoint getBackgroundWorldPoint(const ofVec2f &depthPt) { return getWorldPoint(depthPt, false); }
 		ofPoint getLiveWorldPoint(const ofVec2f &depthPt) { return getWorldPoint(depthPt, true); }
 
-		// void setupWindow();
+		void setupWindow();
 		void setupKinect();
 		
 		virtual void teardown();

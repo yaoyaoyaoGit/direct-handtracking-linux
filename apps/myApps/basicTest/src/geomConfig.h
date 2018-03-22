@@ -11,8 +11,8 @@
 #include "ofMath.h"
 
 /* Projector display is assumed to be to the left of the main display */
-#define PROJW 1920
-#define PROJH 1080
+#define PROJW 1280
+#define PROJH 800
 
 #define DISPW 1920
 #define DISPH 1080

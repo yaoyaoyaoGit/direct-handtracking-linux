@@ -13,7 +13,7 @@
 void BaseApp::setup(){
 
 	ofSetFrameRate(60);
-
+	// setupWindow();
 	setupKinect();
 	ofLogVerbose("baseApp")<<"kinect started";
 	/* Setup worker threads */
@@ -52,7 +52,7 @@ ofPoint BaseApp::getWorldPoint(const ofVec2f &depthPos, bool live) {
 			if(live) {
 				depth = stream->getDepthPixels().getData()[index]; // current (finger) depth
 			} else {
-				depth = bgthread->getBackgroundMean().getPixels()[index]; // stable (background) depth
+				depth = bgthread->getBackgroundMean().getData()[index]; // stable (background) depth
 			}
 
 			float weight = (1 - fabsf(depthPos.x - x)) * (1 - fabsf(depthPos.y - y));
@@ -93,4 +93,16 @@ void BaseApp::keyPressed(int key){
 
 void BaseApp::keyReleased(int key){
 
+}
+
+void BaseApp::setupWindow(){
+
+	ofPoint target(0, 0);
+	ofSetWindowPosition(target.x, target.y);
+	ofSetWindowShape(PROJW + DISPW, max(DISPH, PROJH));
+
+	/* Adjust position to compensate for the effects of the borderless adjustment */
+	ofPoint actualPos(ofGetWindowPositionX(), ofGetWindowPositionY());
+	ofPoint adjTarget = target - (actualPos - target);
+	ofSetWindowPosition(adjTarget.x, adjTarget.y);
 }
