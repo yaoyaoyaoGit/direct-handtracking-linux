@@ -46,10 +46,10 @@ const float touchz_exit = 2.5; // above this avg. z, a touch is considered inact
 #define ZONE(x) ((x) & 0xffff0000)
 #define DIFF(x) ((x) & 0x0000ffff)
 #define ZONE_ERROR 0x00000000
-#define ZONE_NOISE 0xff000000
-#define ZONE_LOW   0xff400000
-#define ZONE_MID   0xff800000
-#define ZONE_HIGH  0xffc00000
+#define ZONE_NOISE 0xff000000 // red
+#define ZONE_LOW   0xff400000 // orange red
+#define ZONE_MID   0xff800000 // orange yellow
+#define ZONE_HIGH  0xffc00000 // yellow
 
 #define BLOB_REJECTED 0x00020000
 #define BLOB_VISITED 0x00010000
@@ -760,7 +760,6 @@ void IRDepthTouchTracker::threadedFunction() {
 	// uint64_t lastDepthTimestamp = 0;
 	// int curDepthFrame = 0;
 	fps.fps = 30; // estimated fps
-
 	while(isThreadRunning()) {
 		stream->update();
 		if(!stream->isFrameNew()){

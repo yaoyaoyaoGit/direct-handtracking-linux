@@ -34,9 +34,11 @@ void ofApp::setupDebug() {
 
 void ofApp::update(){
 	BaseApp::update();
-
 	vector<FingerTouch> newTouches;
 	if(touchTracker->update(newTouches)) {
+		for(FingerTouch &t : newTouches)
+			OF_LOG_VERBOSE("BasicTest_ofApp")<<
+		"new touches at:("<< t.tip.x<<", "<<t.tip.y<<") id: "<<t.id<< " Z:" << t.touchZ;
 		handleTouches(newTouches);
 	}
 

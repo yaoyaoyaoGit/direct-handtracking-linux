@@ -124,6 +124,7 @@ void BackgroundUpdaterThread::threadedFunction() {
 		if(!stream->isFrameNew()){
 			continue;
 		}
+		curDepthFrame++;
 		fps.update();
 		// ofLogVerbose("background") << "frame is new";
 		if(curFrame >= HIST_SIZE)
