@@ -37,8 +37,8 @@ void ofApp::update(){
 	vector<FingerTouch> newTouches;
 	if(touchTracker->update(newTouches)) {
 		for(FingerTouch &t : newTouches)
-			OF_LOG_VERBOSE("BasicTest_ofApp")<<
-		"new touches at:("<< t.tip.x<<", "<<t.tip.y<<") id: "<<t.id<< " Z:" << t.touchZ;
+		// 	ofLogVerbose("BasicTest_ofApp")<<
+		// "new touches at:("<< t.tip.x<<", "<<t.tip.y<<") id: "<<t.id<< " Z:" << t.touchZ;
 		handleTouches(newTouches);
 	}
 
@@ -90,11 +90,13 @@ void ofApp::drawProjector(){
 	/* In this function, draw points in real-world coordinates (metres) */
 	ofSetLineWidth(2);
 	ofNoFill();
-	ofDrawCircle(100,100,10);
+	ofPoint xx = homo(ofPoint(200, 200));
+	ofDrawCircle(xx,10);
 	/* Reproject touches */
 	for(auto &entry : touchMap) {
 		auto &touch = entry.second;
-		ofPoint worldPt = getBackgroundWorldPoint(touch.tip);
+		// ofPoint worldPt = getBackgroundWorldPoint(touch.tip);
+		ofPoint worldPt = touch.tip;
 		if(touch.touched) {
 			ofNoFill();
 			ofSetColor(0, 255, 0);
@@ -103,6 +105,8 @@ void ofApp::drawProjector(){
 			ofSetColor(255, 0, 0);
 		}
 		ofDrawCircle(worldPt, 10);
+		// 	ofLogVerbose("BasicTest_ofApp")<<
+		// "worldPt at:("<< worldPt.x<<", "<<worldPt.y<<")";
 		ofDrawBitmapString(ofVAArgsToString("%.2f\n%d", touch.touchZ, touch.id), worldPt);
 	}
 }
@@ -110,7 +114,6 @@ void ofApp::drawProjector(){
 void ofApp::drawDebug(){
 	const int dw = stream->width;
 	const int dh = stream->height;
-
 	depthviz.draw(0, 0);
 	drawText("Depth", 0, 0, HAlign::left, VAlign::top);
 
@@ -121,16 +124,20 @@ void ofApp::drawDebug(){
 		+ ofVAArgsToString("BG Update FPS: %.1f\n", bgthread->fps.fps)
 		+ ofVAArgsToString("Touch Update FPS: %.1f\n", touchTracker->fps.fps), DISPW, 0, HAlign::right, VAlign::top);
 
-	int debugMouseX = mouseX - PROJW;
+	// int debugMouseX = mouseX + DISPW;
+	int debugMouseX = mouseX;
 	int debugMouseY = mouseY;
 	if(0 <= debugMouseX && debugMouseX < dw && 0 <= debugMouseY && debugMouseY < dh) {
 		ofVec2f pos(debugMouseX, debugMouseY);
 
 		string description;
-		ofPoint curPt = getLiveWorldPoint(pos);
+		// ofPoint curPt = getLiveWorldPoint(pos);
+		ofPoint curPt = pos;
 		description += ofVAArgsToString("curpos: %.6f, %.6f, %.6f\n", curPt.x, curPt.y, curPt.z);
-
-		ofPoint bgPt = getBackgroundWorldPoint(pos);
+		// 	ofLogVerbose("BasicTest_ofApp")<<
+		// "debugMouse at:("<< curPt.x<<", "<<curPt.y<<")";
+		// ofPoint bgPt = getBackgroundWorldPoint(pos);
+		ofPoint bgPt = pos;
 		description += ofVAArgsToString("bgpos:  %.6f, %.6f, %.6f\n", bgPt.x, bgPt.y, bgPt.z);
 
 		drawText(description, 0, DISPH, HAlign::left, VAlign::bottom);
@@ -139,22 +146,27 @@ void ofApp::drawDebug(){
 
 void ofApp::draw(){
 	ofClear(64);
-	/* Draw debug info */
+	/* Draw onto projector */
 	ofPushMatrix();
 	ofPushStyle();
-	drawDebug();
+	ofTranslate(DISPW, 0);
+	// ofSetMatrixMode(OF_MATRIX_MODELVIEW);
+ //    ofMultMatrix(projector_transpose);
+	drawProjector();
 	ofPopStyle();
 	ofPopMatrix();
 
-	/* Draw onto projector */
-	// ofPushMatrix();
-	// ofPushStyle();
-	// ofSetMatrixMode(OF_MATRIX_MODELVIEW);
- //    ofMultMatrix(projector_transpose);
- //    ofTranslate(DISPW, 0);
-	// drawProjector();
-	// ofPopStyle();
-	// ofPopMatrix();
+	/* Draw debug info */
+	ofPushMatrix();
+	ofPushStyle();
+
+	drawDebug();
+	ofSetLineWidth(2);
+	ofDrawCircle(200,200,10);	
+	ofPopStyle();
+	ofPopMatrix();
+
+
 }
 
 //--------------------------------------------------------------

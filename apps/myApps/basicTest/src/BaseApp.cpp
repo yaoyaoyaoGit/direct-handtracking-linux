@@ -13,7 +13,7 @@
 void BaseApp::setup(){
 
 	ofSetFrameRate(60);
-	// setupWindow();
+	setupWindow();
 	setupKinect();
 	ofLogVerbose("baseApp")<<"kinect started";
 	/* Setup worker threads */
