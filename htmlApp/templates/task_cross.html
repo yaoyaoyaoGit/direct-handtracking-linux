@@ -2,28 +2,24 @@
 <head>
     <script src="http://cdnjs.cloudflare.com/ajax/libs/d3/4.6.0/d3.min.js"></script>
     <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
-    <style>
-        svg {
-            -webkit-touch-callout: none;
-            -webkit-user-select: none;
-            -khtml-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
-        }
-    </style>
 </head>
 <style>
-body {
-    text-align: center;
-    font-family: Sans-serif;
-    margin: 0;
-}
 #canvas {
     background-color: black;
 }
+
+line{
+    stroke-width: 5;
+    stroke: white;
+}
+
 </style>
 <body>
-        <svg id="canvas" width="1280" height="800">
+    <svg id="canvas" width="1280" height="800">
+        
+    </svg>
+
+    <script src="{{ url_for('static', filename = 'js/task_cross.js')}}"></script>
+
 </body>
 </html>
