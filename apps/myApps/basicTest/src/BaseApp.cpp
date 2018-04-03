@@ -12,7 +12,7 @@
 //--------------------------------------------------------------
 void BaseApp::setup(){
 
-	ofSetFrameRate(60);
+	ofSetFrameRate(30);
 	setupWindow();
 	setupKinect();
 	ofLogVerbose("baseApp")<<"kinect started";

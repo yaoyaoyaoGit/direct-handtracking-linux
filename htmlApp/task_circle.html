@@ -1,0 +1,284 @@
+<html>
+<head>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/d3/4.6.0/d3.min.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <style>
+        svg {
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+    </style>
+</head>
+<style>
+body {
+    text-align: center;
+    font-family: Sans-serif;
+    margin: 0;
+}
+#canvas {
+    background-color: black;
+}
+</style>
+<body>
+    <svg id="canvas" width="1280" height="800">
+        <circle cx="640" cy="400" r="200" stroke="red" stroke-width="20" fill="transparent" />
+        <circle cx="640" cy="400" r="5" stroke="red" stroke-width="20" fill="transparent" />
+    </svg>
+
+    <script>
+    function WebSocketRun() {
+        var canvas = d3.select("#canvas");
+        var colors = ["blue", "blue", "blue", "blue", "blue", "blue"];
+        //var alltexts = new Array(3);
+        //alltexts.fill("");
+        // var currentRow = 0;
+        // var textname = "text#type";
+        // var totalWidth = 1180;
+        // var isShift = false;
+        // var isShow = false;
+        var isRecord = false;
+        var isRecordLast = false;
+
+        document.addEventListener("keydown", (event) => {
+          if(event.keyCode == 82) {
+            isRecord = !isRecord;
+          }
+        })
+
+        // setInterval(function(){
+        //   isShow = !isShow;
+        //   if(isShow) {
+        //     alltexts[currentRow] += "|";
+        //   }
+        //   else {
+        //     alltexts[currentRow] = alltexts[currentRow].slice(0, -1);
+        //   }
+        //   for(idx = 0; idx < 3; idx++) {
+        //     var selector = textname + idx.toString().trim();
+        //     d3.select(selector).text(alltexts[idx]);
+        //   }
+        // }, 1000);
+
+        // function holdBack(x, y) {
+        //   d3.selectAll("g").each(function() {
+        //     var bbox = this.getBoundingClientRect();
+        //     if(x > bbox.left && x < bbox.right &&
+        //        y > bbox.top && y < bbox.bottom) {
+        //       if(d3.select(this).select("rect").attr('id') == "back") {
+        //         findContainingKey(x, y);
+        //       }
+        //     }
+        //   });
+        // }
+
+        // function findContainingKey(x, y, finger, state) {
+        //     d3.selectAll("g").each(function() {
+        //         var bbox = this.getBoundingClientRect();
+        //         if (x > bbox.left && x < bbox.right &&
+        //             y > bbox.top && y < bbox.bottom) {
+        //             d3.select(this)
+        //             .select("rect")
+        //             .style("fill","red");
+        //             var val = d3.select(this).text();
+        //             var id = d3.select(this).select("rect").attr("id");
+        //             if(id == null) {
+        //               return;
+        //             }
+        //             val = val.trim();
+        //             var lineval;
+
+        //             if(isShow) {
+        //               alltexts[currentRow] = alltexts[currentRow].slice(0, -1);
+        //             }
+
+        //             if(val == "space") {
+        //                 val = " ";
+        //             }
+        //             if(id == 'shift') {
+        //               val = "";
+        //               isShift = !isShift;
+        //             }
+        //             if(val == "enter") {
+        //                 val = "";
+        //                 if(currentRow < 2) {
+        //                     currentRow++;
+        //                 }
+        //             }
+        //             if(id == "back") {
+        //                 val = "";
+        //                 if(alltexts[currentRow].length > 0) {
+        //                     alltexts[currentRow] = alltexts[currentRow].slice(0, -1);
+        //                 }
+        //                 else {
+        //                     if(currentRow != 0) {
+        //                         currentRow--;
+        //                         alltexts[currentRow] = alltexts[currentRow].slice(0, -1);
+        //                     }
+        //                 }
+        //             }
+        //             console.log(finger)
+        //             if(id.endsWith("_")) {
+        //               val = id.substr(0, 1)
+        //             }
+        //             if(val != "" && val != " " && finger == "4") {
+        //               val = val.toUpperCase();
+        //             }
+        //             var selector = textname + currentRow.toString().trim();
+        //             var currentWidth;
+        //             try {
+        //                 currentWidth = d3.select(selector).node().getComputedTextLength();
+        //             }
+        //             catch (e) {
+        //                 currentWidth = 0;
+
+        //             }
+        //             if(currentWidth > totalWidth && currentRow < 2) {
+        //                 currentRow++;
+        //                 currentWidth = 0;
+        //             }
+        //             if(currentWidth < totalWidth) {
+        //                 alltexts[currentRow] += val;
+        //             }
+        //             if(isShow) {
+        //               alltexts[currentRow] += "|";
+        //             }
+        //             var idx;
+        //             for(idx = 0; idx <= currentRow; idx++) {
+        //                 selector = textname + idx.toString().trim();
+        //                 d3.select(selector).text(alltexts[idx]);
+        //             }
+
+                    //send data to writeFiles
+                    // if(isRecord) {
+                    //   var time = Math.round(new Date().getTime() / 1000);
+                    //   $.ajax({
+                    //     url: "http://127.0.0.1:5000",
+                    //     type: "POST",
+                    //     data: {'key': id,
+                    //            'time': time,
+                    //            'x' : x, 
+                    //            'y' : y,
+                    //            'finger' : finger,
+                    //            'state' : state,
+                    //            'isRecordLast' : isRecordLast},
+                    //   });
+                    // }
+                    // isRecordLast = isRecord;
+        //         }
+        //     });
+        // }
+
+
+        if ("WebSocket" in window) {
+            console.log("WebSocket is supported by your Browser!");
+
+            // Let us open a web socket
+            var ws = new WebSocket("ws://localhost:9002/");
+
+            ws.onopen = function()
+            {
+                // Web Socket is connected, send data using send()
+            };
+
+            ws.onmessage = function (evt)
+            {
+                var receivedTouches = $.parseJSON(evt.data);
+                // console.log(receivedTouches);
+
+                // canvas.selectAll(".touch-point").remove();
+                // if (receivedTouches == null) {
+                //     d3.selectAll("g").each(function() {
+                //         d3.select(this)
+                //         .select("rect")
+                //         .style("fill","lightgrey");
+                //         // d3.select("rect.rectdis").remove();
+                //         // d3.select("text.textdis").remove();
+                //     });
+                //     if(isShift) {
+                //       d3.select("rect#shift").style("fill", "red");
+                //     }
+                //     return;
+                // }
+
+                receivedTouches.forEach((e)=>{
+                    if(e.state != 3) {
+                        canvas.append("circle")
+                        .classed("touch-point", true)
+                        .attr("cx", e.px)
+                        .attr("cy", e.py)
+                        .attr("r", 20)
+                        .style("fill-opacity", 1)
+                        .style("fill", colors[e.finger]);
+                        console.log(e.ex, e.ey);
+
+                        if(isRecord) {
+                          var time = Math.round(new Date().getTime() / 1000);
+                          $.ajax({
+                            url: "http://127.0.0.1:5000",
+                            type: "POST",
+                            data: {'key': "id",
+                                   'time': time,
+                                   'px' : e.px, 
+                                   'py' : e.py,
+                                   'ex' : e.ex,
+                                   'ey' : e.ey,
+                                   'finger' : e.finger,
+                                   'state' : e.state,
+                                   'isRecordLast' : isRecordLast},
+                          });
+                        }
+                        isRecordLast = isRecord;
+                    }
+
+                    // canvas.append("rect")
+                    //     .classed("rectdis", true)
+                    //     .attr("x", 60)
+                    //     .attr("y", 490)
+                    //     .attr("width", 150)
+                    //     .attr("height", 100)
+                    //     .attr("stroke", "white")
+                    //     .attr("stroke-width", 5)
+                    //     .attr("fill-opacity", 0);
+                    // canvas.append("text")
+                    //     .classed("textdis", true)
+                    //     .attr("x", 35)
+                    //     .attr("y", 25)
+                    //     .style("fill", "lightgrey")
+                    //     .style("font-size", "40px")
+                    //     .style("text-anchor", "start")
+                    // if(e.state == 0) {
+                    //   findContainingKey(e.x, e.y, e.finger, e.state);
+                    // }
+                    // else if(e.state != 3 && isShift) {
+                    //   holdBack(e.x, e.y);
+                    // }
+                });
+            };
+
+            ws.onclose = function()
+            {
+                // websocket is closed.
+                console.log("Connection is closed...");
+            };
+        } else {
+            // The browser doesn't support WebSocket
+            alert("WebSocket NOT supported by your Browser!");
+        }
+    }
+
+    $(()=>{
+        WebSocketRun();
+        // Size canvas
+        const svg = d3.select('#canvas')
+                      .attr('width', 1280)  // extra width space
+                      .attr('height', 800)
+                      .attr('viewBox', '0 0 1280 800');
+
+    });
+    </script>
+</body>
+</html>

@@ -112,7 +112,7 @@ public:
 };
 
 void BackgroundUpdaterThread::threadedFunction() {
-	uint64_t lastDepthTimestamp = 0;
+	uint32_t lastDepthTimestamp = 0;
 	int curDepthFrame = 0;
 	fps.fps = 30; // estimated fps
 
@@ -120,10 +120,19 @@ void BackgroundUpdaterThread::threadedFunction() {
 		// ofSleepMillis(1000);
 		// ofLogVerbose("background") << "running";
 		// Check if the depth frame is new
-		stream->update();
-		if(!stream->isFrameNew()){
+		// stream->update();
+		// if(!stream->isFrameNew()){
+		// 	ofSleepMillis(5);
+		// 	continue;
+		// }
+		lock();
+		uint32_t curDepthTimestamp = stream->timestamp;
+		unlock();
+		if(lastDepthTimestamp == curDepthTimestamp) {
+			ofSleepMillis(5);
 			continue;
 		}
+		lastDepthTimestamp = curDepthTimestamp;
 		curDepthFrame++;
 		fps.update();
 		// ofLogVerbose("background") << "frame is new";

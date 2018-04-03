@@ -27,8 +27,8 @@ const int edge_depthabs_thresh = 100; // mm: max diff between pixels and bg in d
 /// object measurement parameters (n.b. ideally these would be in mm. Since they are in px, they should be
 /// liberally set to avoid rejecting too many objects.)
 const int arm_min_size = 100; // px: minimum size of arm blob
-const int hand_min_size = 10; // px: minimum size of hand blob
-const int finger_min_size = 10; // px: minimum size of finger blob
+const int hand_min_size = 10; // px: minimum size of hand blob 
+const int finger_min_size = 5; // px: minimum size of finger blob
 const int finger_min_dist = 5; // px: finger minimum length (distance); shorter "fingers" are pruned
 const int tip_max_dist = 30; // px: maximum flood distance for tip fill (if exceeded, rollback)
 
@@ -41,7 +41,7 @@ const int tipavg_window = 1; // number of highest-distance pixels to average for
 const int touchz_window = 8; // number of highest-distance pixels to average for touchz detection
 const float touchz_enter = 0.5; // below this avg. z, a touch is considered active
 const float touchz_exit = 2.5; // above this avg. z, a touch is considered inactive (must be higher than touchz_enter)
-
+//2.5-> 1
 /* diffPx operators and definitions */
 #define ZONE(x) ((x) & 0xffff0000)
 #define DIFF(x) ((x) & 0x0000ffff)
@@ -67,11 +67,15 @@ void IRDepthTouchTracker::buildEdgeImage() {
 	// uint16_t *irPx = irStream.getPixelsRef().getPixels();
 	uint8_t *ircannyPx = irCanny.getPixels().getData();
 	for(int i=0; i<n; i++) {
-		ircannyPx[i] = irPx[i] / 64;
+		ircannyPx[i] = irPx[i]/256;
+		// if(irPx[i]/64>255)
+		// 	ircannyPx[i] = 255;
+		// else
+		// 	ircannyPx[i] = irPx[i]/64;
 	}
 	cv::Mat irCannyMat = cv::cvarrToMat(irCanny.getCvImage());
 	/* Edge finding, lightly tuned parameters */
-	cv::Canny(irCannyMat, irCannyMat, 4000, 8000, 5, true); // changes from 7 to 5
+	cv::Canny(irCannyMat, irCannyMat, 45, 90, 3, true); // changes from 7 to 5
 
 	/* Mark significant pixels (IR pixels that will be holefilled). */
 	/* Currently, all pixels are considered significant. */
@@ -757,24 +761,25 @@ vector<FingerTouch> IRDepthTouchTracker::mergeTouches(vector<FingerTouch> &curTo
 }
 
 void IRDepthTouchTracker::threadedFunction() {
-	// uint64_t lastDepthTimestamp = 0;
-	// int curDepthFrame = 0;
+	uint32_t lastDepthTimestamp = 0;
+	int curDepthFrame = 0;
 	fps.fps = 30; // estimated fps
 	while(isThreadRunning()) {
-		stream->update();
-		if(!stream->isFrameNew()){
-			continue;
-		}
-		// // Check if the depth frame is new
-		// uint64_t curDepthTimestamp = depthStream.getFrameTimestamp();
-		// if(lastDepthTimestamp == curDepthTimestamp) {
-		// 	ofSleepMillis(5);
+		// stream->update();
+		// if(!stream->isFrameNew()){
 		// 	continue;
 		// }
-		// lastDepthTimestamp = curDepthTimestamp;
-		// curDepthFrame++;
-		// fps.update();
-
+		// // Check if the depth frame is new
+		lock();
+		uint32_t curDepthTimestamp = stream->timestamp;
+		unlock();
+		if(lastDepthTimestamp == curDepthTimestamp) {
+			ofSleepMillis(5);
+			continue;
+		}
+		lastDepthTimestamp = curDepthTimestamp;
+		curDepthFrame++;
+		fps.update();
 		buildDiffImage();
 		buildEdgeImage(); // edge image depends on diff
 
@@ -812,14 +817,12 @@ void IRDepthTouchTracker::drawDebug(float x, float y) {
 	diffIm[back].update();
 	edgeIm[back].update();
 	blobIm[back].update();
-
 	diffIm[back].draw(x, y);
 	edgeIm[back].draw(x, y+dh);
 	diffIm[back].draw(x+dw, y);
 	edgeIm[back].draw(x+dw, y);
 
 	blobIm[back].draw(x+dw, y+dh);
-	
 	drawText("Diff", x, y, HAlign::left, VAlign::top);
 	drawText("Edge", x, y+dh, HAlign::left, VAlign::top);
 	drawText("Diff+Edge", x+dw, y, HAlign::left, VAlign::top);
